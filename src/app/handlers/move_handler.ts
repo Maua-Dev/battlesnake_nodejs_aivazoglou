@@ -4,7 +4,7 @@ export function moveHandler(req: Request, res: Response) {
   try {
     res.json({
       apiversion: "1",
-      author: "Maua-Dev",
+      author: "Aivazoglou",
       color: "#8B0000",
       head: "tiger-king",
       tail: "hook",
