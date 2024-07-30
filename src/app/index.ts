@@ -83,6 +83,7 @@ app.post('/move', (req: Request, res: Response) => {
     };
     res.json(response);
 
+    console.log(poscoes_ocupadas);
     console.log(response);
     not_prox_mov = opposites[randomDirection];
 });
