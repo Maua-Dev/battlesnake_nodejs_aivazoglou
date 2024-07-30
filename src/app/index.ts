@@ -70,7 +70,7 @@ app.post('/move', (req: Request, res: Response) => {
         // Find the opposite direction
         NextPosition = calculateNextPosition(head, randomDirection);
 
-        const isCoordinateIncluded = posicoes_ocupadas.some(coordinate => 
+        isCoordinateIncluded = posicoes_ocupadas.some(coordinate => 
             coordinate.x === NextPosition.x && coordinate.y === NextPosition.y
         );
 
@@ -80,11 +80,13 @@ app.post('/move', (req: Request, res: Response) => {
     // const NextPosition = calculateNextPosition(head, randomDirection);
     const response = {
         move: randomDirection,
-        shout: NextPosition
+        shout: 'fe'
     };
     res.json(response);
 
     console.log(posicoes_ocupadas);
+    console.log(NextPosition);
+    console.log(isCoordinateIncluded);
     console.log(response);
     not_prox_mov = opposites[randomDirection];
 });
