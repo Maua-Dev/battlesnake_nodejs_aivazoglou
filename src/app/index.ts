@@ -43,7 +43,7 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
 }
 
 app.post('/move', (req: Request, res: Response) => {
-    console.log(req.body);
+    console.log(req.body.you);
 
     poscoes_ocupadas = [...limites, ...req.body.you.body];
     
@@ -84,7 +84,7 @@ app.post('/move', (req: Request, res: Response) => {
     };
     res.json(response);
 
-    console.log(res);
+    console.log(response);
     not_prox_mov = opposites[randomDirection];
 });
 
