@@ -45,9 +45,9 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
 app.post('/move', (req: Request, res: Response) => {
     console.log(req.body);
 
-    poscoes_ocupadas = [...limites, ...req.body.body];
+    poscoes_ocupadas = [...limites, ...req.body.you.body];
     
-    const head = req.body.head;
+    const head = req.body.you.head;
 
     //const head = { x: 2, y: 2}
 
