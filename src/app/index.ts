@@ -19,7 +19,7 @@ app.post('/move', (req: Request, res: Response) => {
     console.log(req.body);
     const directions = ["up", "down", "left", "right"];
     // Define opposite directions
-    const opposites = {
+    const opposites: { [key: string]: string } = {
         "up": "down",
         "down": "up",
         "left": "right",
@@ -27,18 +27,19 @@ app.post('/move', (req: Request, res: Response) => {
     };
 
     let not_prox_mov;
+    let randomDirection = directions[Math.floor(Math.random() * directions.length)];
 
     do {
         // Select a random direction
-        const i = directions[Math.floor(Math.random() * directions.length)];
+        randomDirection = directions[Math.floor(Math.random() * directions.length)];
         // Find the opposite direction
-    } while (directions[i] === not_prox_mov); // Ensure we don't pick the same direction twice
+    } while (randomDirection === not_prox_mov); // Ensure we don't pick the same direction twice
     
-    not_prox_mov = opposites[i];
+    not_prox_mov = opposites[randomDirection];
 
     const response = {
-        move: directions[i],
-        shout: `I'm moving ${directions[i]}!`
+        move: randomDirection,
+        shout: `I'm moving ${randomDirection}!`
     };
     res.json(response);
 });
