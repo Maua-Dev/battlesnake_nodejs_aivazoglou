@@ -18,10 +18,10 @@ const limites: { x: number; y: number }[] = []
 
 for (let temp_var=0; temp_var<11; temp_var++){
     limites.push({"x": -1, "y": temp_var});
-    limites.push({"x": 12, "y": temp_var});
+    limites.push({"x": 11, "y": temp_var});
 
     limites.push({"x": temp_var, "y": -1});
-    limites.push({"x": temp_var, "y": 12});
+    limites.push({"x": temp_var, "y": 11});
 }
 
 let posicoes_ocupadas = [];
@@ -85,7 +85,7 @@ app.post('/move', (req: Request, res: Response) => {
     res.json(response);
 
     console.log(posicoes_ocupadas);
-    console.log(NextPosition);
+    console.log(    );
     console.log(isCoordinateIncluded);
     console.log(response);
     not_prox_mov = opposites[randomDirection];
