@@ -8,6 +8,7 @@ import { router } from './routes/snake_routes'
 const app = express();
 app.use(express.json());
 app.use(router)
+let not_prox_mov = "down";
 
 app.post('/start', (req: Request, res: Response) => {
     res.send("ok");
@@ -24,7 +25,7 @@ app.post('/move', (req: Request, res: Response) => {
         "right": "left"
     };
 
-    let not_prox_mov = "down";
+    
     let randomDirection = directions[Math.floor(Math.random() * directions.length)];
 
     do {
@@ -33,13 +34,15 @@ app.post('/move', (req: Request, res: Response) => {
         // Find the opposite direction
     } while (randomDirection === not_prox_mov); // Ensure we don't pick the same direction twice
     
-    not_prox_mov = opposites[randomDirection];
+    
 
     const response = {
         move: randomDirection,
-        shout: `I'm moving ${randomDirection}!`
+        shout: `I'm not moving ${not_prox_mov}!`
     };
     res.json(response);
+    
+    not_prox_mov = opposites[randomDirection];
 });
 
 app.post('/end', (req: Request, res: Response) => {
