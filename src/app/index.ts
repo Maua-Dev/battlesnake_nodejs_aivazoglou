@@ -24,7 +24,7 @@ for (let temp_var=0; temp_var<11; temp_var++){
     limites.push({"x": temp_var, "y": 12});
 }
 
-let poscoes_ocupadas = [];
+let posicoes_ocupadas = [];
 let NextPosition = null;
 
 function calculateNextPosition(head: { x: number; y: number }, direction: string): { x: number; y: number } {
@@ -45,7 +45,7 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
 app.post('/move', (req: Request, res: Response) => {
     console.log(req.body.you.head);
 
-    poscoes_ocupadas = [...limites, ...req.body.you.body];
+    posicoes_ocupadas = [...limites, ...req.body.you.body];
     
     const head = req.body.you.head;
 
@@ -69,7 +69,7 @@ app.post('/move', (req: Request, res: Response) => {
         // Find the opposite direction
         const NextPosition = calculateNextPosition(head, randomDirection);
 
-        const isCoordinateIncluded = limites.some(coordinate => 
+        const isCoordinateIncluded = posicoes_ocupadas.some(coordinate => 
             coordinate.x === NextPosition.x && coordinate.y === NextPosition.y
         );
 
@@ -83,7 +83,7 @@ app.post('/move', (req: Request, res: Response) => {
     };
     res.json(response);
 
-    console.log(poscoes_ocupadas);
+    console.log(posicoes_ocupadas);
     console.log(response);
     not_prox_mov = opposites[randomDirection];
 });
