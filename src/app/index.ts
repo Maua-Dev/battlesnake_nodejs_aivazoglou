@@ -9,6 +9,8 @@ const app = express();
 app.use(express.json());
 app.use(router)
 
+const not_prox_mov = "down";
+
 app.post('/start', (req: Request, res: Response) => {
     res.send("ok");
 });
@@ -16,7 +18,14 @@ app.post('/start', (req: Request, res: Response) => {
 app.post('/move', (req: Request, res: Response) => {
     console.log(req.body);
     const directions = ["up", "down", "left", "right"];
+    while (True){
     const i = Math.floor(Math.random() * directions.length);
+    if (directions[i] != not_prox_mov){
+        break;
+    }
+    }
+    
+
     const response = {
         move: directions[i],
         shout: `I'm moving ${directions[i]}!`
