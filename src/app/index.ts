@@ -43,7 +43,7 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
 }
 
 app.post('/move', (req: Request, res: Response) => {
-    console.log(req.body.you);
+    console.log(req.body.you.head);
 
     poscoes_ocupadas = [...limites, ...req.body.you.body];
     
@@ -79,8 +79,7 @@ app.post('/move', (req: Request, res: Response) => {
     const NextPosition = calculateNextPosition(head, randomDirection);
     const response = {
         move: randomDirection,
-        shout: head,
-        shout2: NextPosition
+        shout: 'teste'
     };
     res.json(response);
 
