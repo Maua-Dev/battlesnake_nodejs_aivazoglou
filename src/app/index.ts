@@ -60,6 +60,7 @@ app.post('/move', (req: Request, res: Response) => {
         "right": "left"
     };
 
+    let NextPosition: { x: any; y: any};
     let isCoordinateIncluded;
     let randomDirection = directions[Math.floor(Math.random() * directions.length)];
 
@@ -67,7 +68,7 @@ app.post('/move', (req: Request, res: Response) => {
         // Select a random direction
         randomDirection = directions[Math.floor(Math.random() * directions.length)];
         // Find the opposite direction
-        let NextPosition = calculateNextPosition(head, randomDirection);
+        NextPosition = calculateNextPosition(head, randomDirection);
 
         const isCoordinateIncluded = posicoes_ocupadas.some(coordinate => 
             coordinate.x === NextPosition.x && coordinate.y === NextPosition.y
