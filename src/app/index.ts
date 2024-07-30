@@ -9,8 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(router)
 
-const not_prox_mov = "down";
-
 app.post('/start', (req: Request, res: Response) => {
     res.send("ok");
 });
@@ -26,7 +24,7 @@ app.post('/move', (req: Request, res: Response) => {
         "right": "left"
     };
 
-    let not_prox_mov;
+    let not_prox_mov = "down";
     let randomDirection = directions[Math.floor(Math.random() * directions.length)];
 
     do {
