@@ -84,6 +84,7 @@ app.post('/move', (req: Request, res: Response) => {
     };
     res.json(response);
 
+    console.log(res);
     not_prox_mov = opposites[randomDirection];
 });
 
