@@ -5,7 +5,7 @@ export function moveHandler(req: Request, res: Response) {
     res.json({
       apiversion: "1",
       author: "Aivazoglou",
-      color: "#8B0000",
+      color: "#999966",
       head: "sand-worm",
       tail: "black-bum",
       version: "1.0.0"
