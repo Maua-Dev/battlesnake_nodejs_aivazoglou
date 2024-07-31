@@ -55,6 +55,10 @@ function calculateDistance(pos1: { x: number, y: number }, pos2: { x: number, y:
     return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
 }
 
+function isEqual(coord1: { x: any; y: any; }, coord2: { x: any; y: any; }) {
+    return coord1.x === coord2.x && coord1.y === coord2.y;
+}
+
 function floodFill(head: { x: number; y: number }, occupiedPositions: { x: number; y: number }[]): number {
     const stack = [head];
     const visited = new Set();
@@ -79,7 +83,7 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
 }
 
 app.post('/move', (req: Request, res: Response) => {
-    const posicoes_ocupadas: any[] = [];
+    let posicoes_ocupadas: any[] = [];
 
     const body_snake = req.body.you.body;
     const vida = req.body.you.health;
@@ -95,11 +99,10 @@ app.post('/move', (req: Request, res: Response) => {
     //let index_tail = posicoes_ocupadas.indexOf(tail);
 
     // Verificar se o valor existe no array
-    while (posicoes_ocupadas.indexOf(tail) !== -1) {
-        posicoes_ocupadas.splice(posicoes_ocupadas.indexOf(tail), 1);
-    }
+    posicoes_ocupadas = posicoes_ocupadas.filter(coord => !isEqual(coord, tail));
 
     console.log(posicoes_ocupadas);
+
 
     const comidas = [...req.body.board.food];
 
