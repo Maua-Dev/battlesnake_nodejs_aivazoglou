@@ -66,7 +66,12 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
         stack.push({ x: current.x, y: current.y - 1 });
     }
 
-    return count;
+    if (count > 10){
+        return 10;
+    }else{
+        return count;
+    }
+    
 }
 
 app.post('/move', (req: Request, res: Response) => {
