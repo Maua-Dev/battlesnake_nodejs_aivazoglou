@@ -53,7 +53,6 @@ app.post('/move', (req: Request, res: Response) => {
         posicoes_ocupadas = [...posicoes_ocupadas, ...req.body.board.snakes[n_cobras].body];
     }
 
-    const limites = []; // Defina os limites do tabuleiro conforme necessário
     posicoes_ocupadas = [...posicoes_ocupadas, ...limites];
     let comidas = [...req.body.board.food];
 
