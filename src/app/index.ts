@@ -100,6 +100,8 @@ app.post('/move', (req: Request, res: Response) => {
         posicoes_ocupadas.splice(index_tail, 1);
     }
 
+    console.log(posicoes_ocupadas);
+
     const comidas = [...req.body.board.food];
 
     const head = req.body.you.head;
@@ -118,7 +120,7 @@ app.post('/move', (req: Request, res: Response) => {
     }
 
     if (vida>50 && size % 2 === 0){
-        closestFood = pre_tail;
+        closestFood = tail;
     }
 
     let possibleMoves: { direction: string, nextPos: { x: number, y: number } }[] = [];
