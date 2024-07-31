@@ -84,6 +84,7 @@ app.post('/move', (req: Request, res: Response) => {
     const body_snake = req.body.you.body;
     const vida = req.body.you.health;
     const tail = body_snake[body_snake.length - 1];
+    const pre_tail = body_snake[body_snake.length - 2];
     const size = req.body.you.length
 
     for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
@@ -117,7 +118,7 @@ app.post('/move', (req: Request, res: Response) => {
     }
 
     if (vida>50 && size % 2 === 0){
-        closestFood = tail;
+        closestFood = pre_tail;
     }
 
     let possibleMoves: { direction: string, nextPos: { x: number, y: number } }[] = [];
