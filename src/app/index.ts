@@ -42,6 +42,15 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
     }
 }
 
+// Função para embaralhar um array
+function shuffle(array: any[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 function calculateDistance(pos1: { x: number, y: number }, pos2: { x: number, y: number }): number {
     return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
 }
@@ -114,15 +123,7 @@ app.post('/move', (req: Request, res: Response) => {
             possibleMoves.push({ direction, nextPos });
         }
     });
-
-    // Função para embaralhar um array
-    function shuffle(array: any[]) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-}
+    
     // Avaliar as direções possíveis e evitar becos sem saída
     //possibleMoves = shuffle(possibleMoves);
 
