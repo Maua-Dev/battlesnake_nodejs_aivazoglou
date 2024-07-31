@@ -7,7 +7,7 @@ export function moveHandler(req: Request, res: Response) {
       author: "Aivazoglou",
       color: "#999966",
       head: "sand-worm",
-      tail: "black-bum",
+      tail: "block-bum",
       version: "1.0.0"
     })
 
@@ -16,3 +16,6 @@ export function moveHandler(req: Request, res: Response) {
     res.status(500).send("Internal Server Error: " + error.message)
   }
 }
+
+//round-bum
+//block-bum
