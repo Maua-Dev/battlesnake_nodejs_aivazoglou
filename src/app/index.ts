@@ -99,7 +99,14 @@ app.post('/move', (req: Request, res: Response) => {
     //let index_tail = posicoes_ocupadas.indexOf(tail);
 
     // Verificar se o valor existe no array
-    posicoes_ocupadas = posicoes_ocupadas.filter(coord => !isEqual(coord, tail));
+    // Encontrar o índice da coordenada a ser removida
+    let indexToRemove = posicoes_ocupadas.findIndex(coord => isEqual(coord, tail));
+
+    // Verificar se a coordenada foi encontrada
+    if (indexToRemove !== -1) {
+        // Remover a coordenada do array
+        posicoes_ocupadas.splice(indexToRemove, 1);
+    }
 
     console.log(posicoes_ocupadas);
 
