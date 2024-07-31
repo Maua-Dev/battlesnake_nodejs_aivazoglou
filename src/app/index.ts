@@ -197,6 +197,8 @@ app.post('/move', (req: Request, res: Response) => {
         }
     });
 
+    console.log(head);
+    console.log(cabecas_vida);
     console.log(bestFloodFillDirections);
     console.log(bestFoodDirections);
     console.log(UnSafeDirections);
