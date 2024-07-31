@@ -76,8 +76,6 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
     }
 
     return count;
-    
-    
 }
 
 app.post('/move', (req: Request, res: Response) => {
@@ -123,10 +121,8 @@ app.post('/move', (req: Request, res: Response) => {
             possibleMoves.push({ direction, nextPos });
         }
     });
-    
-    // Avaliar as direções possíveis e evitar becos sem saída
-    //possibleMoves = shuffle(possibleMoves);
 
+    // Avaliar as direções possíveis e evitar becos sem saída
     let bestDirection = possibleMoves[0].direction;
     let maxSpace = -1;
     possibleMoves.forEach(move => {
@@ -137,9 +133,23 @@ app.post('/move', (req: Request, res: Response) => {
         }
     });
 
+    // Agora, entre as melhores direções, escolha a mais próxima da comida
+    possibleMoves = possibleMoves.filter(move => floodFill(move.nextPos, posicoes_ocupadas) === maxSpace);
+    if (possibleMoves.length > 0) {
+        bestDirection = possibleMoves[0].direction;
+        minDistance = calculateDistance(head, calculateNextPosition(head, bestDirection));
+        possibleMoves.forEach(move => {
+            const distance = calculateDistance(move.nextPos, closestFood);
+            if (distance < minDistance) {
+                minDistance = distance;
+                bestDirection = move.direction;
+            }
+        });
+    }
+
     const response = {
         move: bestDirection,
-        shout: 'Avoiding dead ends!'
+        shout: 'Moving towards food!'
     };
     res.json(response);
 });
