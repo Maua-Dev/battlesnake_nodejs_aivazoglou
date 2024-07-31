@@ -65,22 +65,6 @@ app.post('/move', (req: Request, res: Response) => {
         "right": "left"
     };
 
-    // Função para calcular a próxima posição baseada na direção
-    const calculateNextPosition = (position: { x: number, y: number }, direction: string) => {
-        switch (direction) {
-            case "up":
-                return { x: position.x, y: position.y - 1 };
-            case "down":
-                return { x: position.x, y: position.y + 1 };
-            case "left":
-                return { x: position.x - 1, y: position.y };
-            case "right":
-                return { x: position.x + 1, y: position.y };
-            default:
-                return position;
-        }
-    };
-
     // Função para calcular a distância manhattan entre duas posições
     const calculateDistance = (pos1: { x: number, y: number }, pos2: { x: number, y: number }) => {
         return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
