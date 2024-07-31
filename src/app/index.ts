@@ -90,16 +90,51 @@ app.post('/move', (req: Request, res: Response) => {
     const tail = body_snake[body_snake.length - 1];
     const pre_tail = body_snake[body_snake.length - 2];
     const size = req.body.you.length
+    let cabecas_vida = [];
+    let posicoesFuturasAmeaca: { x: number; y: number }[] = [];
+
+    const comidas = [...req.body.board.food];
+
+    const head = req.body.you.head;
+    let directions = ["up", "down", "left", "right"];
+    directions = shuffle(directions);
 
     for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
         posicoes_ocupadas.push(...req.body.board.snakes[n_cobras].body);
     }
 
     posicoes_ocupadas.push(...limites);
-    //let index_tail = posicoes_ocupadas.indexOf(tail);
 
-    // Verificar se o valor existe no array
-    // Encontrar o índice da coordenada a ser removida
+    // Coletar cabeças e vidas das outras cobras
+    for (let n_cobra = 0; n_cobra < req.body.board.snakes.length; n_cobra++) {
+        const cobra = req.body.board.snakes[n_cobra];
+        cabecas_vida.push({ head: cobra.head, vida: cobra.health });
+    }
+
+    // Filtrar para manter apenas as cobras que tenham vida igual ou maior que minha vida
+    let cabecasAmeaca = cabecas_vida.filter(cobra => cobra.vida >= vida);
+
+    cabecasAmeaca.forEach(cobra => {
+        const head = cobra.head;
+    
+        directions.forEach(direction => {
+            const nextPos = calculateNextPosition(head, direction);
+            posicoesFuturasAmeaca.push(nextPos);
+        });
+    });
+
+    let UnSafeDirections: string[] = [];
+
+    // Calcular a próxima posição para cada direção e verificar colisão
+    directions.forEach(direction => {
+        const nextPos = calculateNextPosition(head, direction);
+        const isCollision = posicoesFuturasAmeaca.some(pos => pos.x === nextPos.x && pos.y === nextPos.y);
+
+        if (isCollision) {
+            UnSafeDirections.push(direction);
+        }
+    });
+
     let indexToRemove = posicoes_ocupadas.findIndex(coord => isEqual(coord, tail));
 
     // Verificar se a coordenada foi encontrada
@@ -111,11 +146,7 @@ app.post('/move', (req: Request, res: Response) => {
     console.log(posicoes_ocupadas);
 
 
-    const comidas = [...req.body.board.food];
-
-    const head = req.body.you.head;
-    let directions = ["up", "down", "left", "right"];
-    directions = shuffle(directions);
+    
 
     // Encontre a comida mais próxima
     let closestFood = comidas[0];
@@ -167,17 +198,28 @@ app.post('/move', (req: Request, res: Response) => {
     });
 
     // Encontrar direção em comum
-    let commonDirections = bestFloodFillDirections.filter(direction => bestFoodDirections.includes(direction));
+    let commonDirections = bestFloodFillDirections
+        .filter(direction => bestFoodDirections.includes(direction))
+        .filter(direction => !UnSafeDirections.includes(direction));
 
     let finalDirection;
     if (commonDirections.length > 0) {
         finalDirection = commonDirections[Math.floor(Math.random() * commonDirections.length)];
     } else {
-        finalDirection = bestFloodFillDirections[Math.floor(Math.random() * bestFloodFillDirections.length)];
+        // Caso não haja direção comum segura, escolher uma direção segura, priorizando flood fill
+        const safeFloodFillDirections = bestFloodFillDirections.filter(direction => !UnSafeDirections.includes(direction));
+        if (safeFloodFillDirections.length > 0) {
+            finalDirection = safeFloodFillDirections[Math.floor(Math.random() * safeFloodFillDirections.length)];
+        } else {
+            // Caso não haja nenhuma direção segura, escolher uma direção insegura se necessário
+            finalDirection = bestFloodFillDirections.length > 0 ? 
+                bestFloodFillDirections[Math.floor(Math.random() * bestFloodFillDirections.length)] : 
+                directions[Math.floor(Math.random() * directions.length)];
+        }
     }
 
     const response = {
-        move: "up",
+        move: finalDirection || "up",
         shout: 'Moving towards food!'
     };
     res.json(response);
