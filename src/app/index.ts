@@ -79,18 +79,14 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
 }
 
 app.post('/move', (req: Request, res: Response) => {
-    //console.log('req.body.board');
-    //console.log(req.body.board.food);
-    
-
-    let posicoes_ocupadas: any[] = [];
+    const posicoes_ocupadas: any[] = [];
 
     for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
-        posicoes_ocupadas = [...posicoes_ocupadas, ...req.body.board.snakes[n_cobras].body];
+        posicoes_ocupadas.push(...req.body.board.snakes[n_cobras].body);
     }
 
-    posicoes_ocupadas = [...posicoes_ocupadas, ...limites];
-    let comidas = [...req.body.board.food];
+    posicoes_ocupadas.push(...limites);
+    const comidas = [...req.body.board.food];
 
     const head = req.body.you.head;
     let directions = ["up", "down", "left", "right"];
@@ -115,37 +111,44 @@ app.post('/move', (req: Request, res: Response) => {
             possibleMoves.push({ direction, nextPos });
         }
     });
-    //console.log(possibleMoves);
 
     // Avaliar as direções possíveis e evitar becos sem saída
-    let bestDirection = possibleMoves[0].direction;
+    let bestFloodFillDirections: string[] = [];
     let maxSpace = -1;
     let closestMoveToFood = possibleMoves[0];
+    let minFoodDistance = calculateDistance(closestMoveToFood.nextPos, closestFood);
+    let bestFoodDirections: string[] = [];
 
     possibleMoves.forEach(move => {
         const space = floodFill(move.nextPos, posicoes_ocupadas);
-        //console.log(space);
         if (space > maxSpace) {
             maxSpace = space;
-            bestDirection = move.direction;
+            bestFloodFillDirections = [move.direction];
+        } else if (space === maxSpace) {
+            bestFloodFillDirections.push(move.direction);
         }
-        // Atualizar a direção mais próxima da comida
+
         const distanceToFood = calculateDistance(move.nextPos, closestFood);
-        const closestDistanceToFood = calculateDistance(closestMoveToFood.nextPos, closestFood);
-        if (distanceToFood < closestDistanceToFood) {
-            closestMoveToFood = move;
+        if (distanceToFood < minFoodDistance) {
+            minFoodDistance = distanceToFood;
+            bestFoodDirections = [move.direction];
+        } else if (distanceToFood === minFoodDistance) {
+            bestFoodDirections.push(move.direction);
         }
     });
-    
-    // Se a direção que evita becos sem saída não for em direção à comida, priorize a comida
-    //if (calculateDistance(calculateNextPosition(head, bestDirection), closestFood) >
-    //    calculateDistance(closestMoveToFood.nextPos, closestFood)) {
-    //    bestDirection = closestMoveToFood.direction;
-    //}
-    console.log(bestDirection);
+
+    // Encontrar direção em comum
+    let commonDirections = bestFloodFillDirections.filter(direction => bestFoodDirections.includes(direction));
+
+    let finalDirection;
+    if (commonDirections.length > 0) {
+        finalDirection = commonDirections[Math.floor(Math.random() * commonDirections.length)];
+    } else {
+        finalDirection = bestFloodFillDirections[Math.floor(Math.random() * bestFloodFillDirections.length)];
+    }
 
     const response = {
-        move: bestDirection,
+        move: finalDirection || "up",
         shout: 'Moving towards food!'
     };
     res.json(response);
