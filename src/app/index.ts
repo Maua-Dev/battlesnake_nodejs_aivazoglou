@@ -95,12 +95,6 @@ app.post('/move', (req: Request, res: Response) => {
     const head = req.body.you.head;
     let directions = ["up", "down", "left", "right"];
     directions = shuffle(directions);
-    const opposites: { [key: string]: string } = {
-        "up": "down",
-        "down": "up",
-        "left": "right",
-        "right": "left"
-    };
 
     // Encontre a comida mais próxima
     let closestFood = comidas[0];
@@ -125,26 +119,26 @@ app.post('/move', (req: Request, res: Response) => {
     // Avaliar as direções possíveis e evitar becos sem saída
     let bestDirection = possibleMoves[0].direction;
     let maxSpace = -1;
+    let closestMoveToFood = possibleMoves[0];
+
     possibleMoves.forEach(move => {
         const space = floodFill(move.nextPos, posicoes_ocupadas);
         if (space > maxSpace) {
             maxSpace = space;
             bestDirection = move.direction;
         }
+        // Atualizar a direção mais próxima da comida
+        const distanceToFood = calculateDistance(move.nextPos, closestFood);
+        const closestDistanceToFood = calculateDistance(closestMoveToFood.nextPos, closestFood);
+        if (distanceToFood < closestDistanceToFood) {
+            closestMoveToFood = move;
+        }
     });
 
-    // Agora, entre as melhores direções, escolha a mais próxima da comida
-    possibleMoves = possibleMoves.filter(move => floodFill(move.nextPos, posicoes_ocupadas) === maxSpace);
-    if (possibleMoves.length > 0) {
-        bestDirection = possibleMoves[0].direction;
-        minDistance = calculateDistance(head, calculateNextPosition(head, bestDirection));
-        possibleMoves.forEach(move => {
-            const distance = calculateDistance(move.nextPos, closestFood);
-            if (distance < minDistance) {
-                minDistance = distance;
-                bestDirection = move.direction;
-            }
-        });
+    // Se a direção que evita becos sem saída não for em direção à comida, priorize a comida
+    if (calculateDistance(calculateNextPosition(head, bestDirection), closestFood) >
+        calculateDistance(closestMoveToFood.nextPos, closestFood)) {
+        bestDirection = closestMoveToFood.direction;
     }
 
     const response = {
