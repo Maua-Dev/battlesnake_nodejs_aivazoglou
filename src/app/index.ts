@@ -42,6 +42,10 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
     }
 }
 
+function calculateDistance(pos1: { x: number, y: number }, pos2: { x: number, y: number }): number {
+    return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
+}
+
 function floodFill(head: { x: number; y: number }, occupiedPositions: { x: number; y: number }[]): number {
     const stack = [head];
     const visited = new Set();
