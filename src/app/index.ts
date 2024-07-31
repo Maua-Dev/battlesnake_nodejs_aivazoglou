@@ -66,11 +66,8 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
         stack.push({ x: current.x, y: current.y - 1 });
     }
 
-    if (count > 10){
-        return 10;
-    }else{
-        return count;
-    }
+    return count;
+    
     
 }
 
