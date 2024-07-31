@@ -42,6 +42,29 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
     }
 }
 
+function floodFill(head: { x: number; y: number }, occupiedPositions: { x: number; y: number }[]): number {
+    const stack = [head];
+    const visited = new Set();
+    const key = (pos: { x: number; y: number }) => `${pos.x},${pos.y}`;
+    let count = 0;
+
+    while (stack.length > 0) {
+        const current = stack.pop();
+        if (!current || visited.has(key(current))) continue;
+        visited.add(key(current));
+
+        if (occupiedPositions.some(pos => pos.x === current.x && pos.y === current.y)) continue;
+
+        count++;
+        stack.push({ x: current.x + 1, y: current.y });
+        stack.push({ x: current.x - 1, y: current.y });
+        stack.push({ x: current.x, y: current.y + 1 });
+        stack.push({ x: current.x, y: current.y - 1 });
+    }
+
+    return count;
+}
+
 app.post('/move', (req: Request, res: Response) => {
     console.log('req.body.board');
     console.log(req.body.board.food);
@@ -65,11 +88,6 @@ app.post('/move', (req: Request, res: Response) => {
         "right": "left"
     };
 
-    // Função para calcular a distância manhattan entre duas posições
-    const calculateDistance = (pos1: { x: number, y: number }, pos2: { x: number, y: number }) => {
-        return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
-    };
-
     // Encontre a comida mais próxima
     let closestFood = comidas[0];
     let minDistance = calculateDistance(head, closestFood);
@@ -81,35 +99,29 @@ app.post('/move', (req: Request, res: Response) => {
         }
     }
 
-    let possibleMoves: string[] = [];
+    let possibleMoves: { direction: string, nextPos: { x: number, y: number } }[] = [];
     directions.forEach(direction => {
         let nextPos = calculateNextPosition(head, direction);
         let isOccupied = posicoes_ocupadas.some(pos => pos.x === nextPos.x && pos.y === nextPos.y);
         if (!isOccupied) {
-            possibleMoves.push(direction);
+            possibleMoves.push({ direction, nextPos });
         }
     });
 
-    // Função para selecionar a melhor direção em direção à comida mais próxima
-    const selectBestDirection = () => {
-        let bestDirection = possibleMoves[0];
-        let minFoodDistance = calculateDistance(calculateNextPosition(head, bestDirection), closestFood);
-        possibleMoves.forEach(direction => {
-            let nextPos = calculateNextPosition(head, direction);
-            let foodDistance = calculateDistance(nextPos, closestFood);
-            if (foodDistance < minFoodDistance) {
-                minFoodDistance = foodDistance;
-                bestDirection = direction;
-            }
-        });
-        return bestDirection;
-    };
-
-    let selectedMove = selectBestDirection();
+    // Avaliar as direções possíveis e evitar becos sem saída
+    let bestDirection = possibleMoves[0].direction;
+    let maxSpace = -1;
+    possibleMoves.forEach(move => {
+        const space = floodFill(move.nextPos, posicoes_ocupadas);
+        if (space > maxSpace) {
+            maxSpace = space;
+            bestDirection = move.direction;
+        }
+    });
 
     const response = {
-        move: selectedMove,
-        shout: 'Moving towards food!'
+        move: bestDirection,
+        shout: 'Avoiding dead ends!'
     };
     res.json(response);
 });
