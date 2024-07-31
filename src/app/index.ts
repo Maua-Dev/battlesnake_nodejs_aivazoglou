@@ -197,7 +197,10 @@ app.post('/move', (req: Request, res: Response) => {
         }
     });
 
-    // Encontrar direção em comum
+    console.log(bestFloodFillDirections);
+    console.log(bestFoodDirections);
+    console.log(UnSafeDirections);
+
     let commonDirections = bestFloodFillDirections
         .filter(direction => bestFoodDirections.includes(direction))
         .filter(direction => !UnSafeDirections.includes(direction));
