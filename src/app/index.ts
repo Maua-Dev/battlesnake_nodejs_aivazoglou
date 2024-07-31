@@ -128,7 +128,7 @@ app.post('/move', (req: Request, res: Response) => {
         }
     }
 
-    if (vida>68 && size % 2 === 0){
+    if (vida>80 && size % 2 === 0){
         closestFood = tail;
     }
 
