@@ -43,7 +43,7 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
 }
 
 app.post('/move', (req: Request, res: Response) => {
-    console.log(req.body.board.snakes.length);
+    console.log(req.body.board.food);
 
     let posicoes_ocupadas: any[] = [];
 
@@ -53,7 +53,7 @@ app.post('/move', (req: Request, res: Response) => {
 
     posicoes_ocupadas = [...posicoes_ocupadas, ...limites];
 
-    console.log(posicoes_ocupadas);
+    // console.log(posicoes_ocupadas);
     // posicoes_ocupadas = [...limites, ...req.body.you.body, ...req.body.board.snakes];
     
     const head = req.body.you.head;
@@ -79,7 +79,7 @@ app.post('/move', (req: Request, res: Response) => {
         // Find the opposite direction
         NextPosition = calculateNextPosition(head, randomDirection);
 
-        isCoordinateIncluded = posicoes_ocupadas.some(coordinate => 
+        isCoordinateIncluded = posicoes_ocupadas.some(coordinate =>
             coordinate.x === NextPosition.x && coordinate.y === NextPosition.y
         );
 
@@ -93,10 +93,10 @@ app.post('/move', (req: Request, res: Response) => {
     };
     res.json(response);
 
-    console.log(posicoes_ocupadas);
-    console.log(    );
-    console.log(isCoordinateIncluded);
-    console.log(response);
+    //console.log(posicoes_ocupadas);
+    //console.log(    );
+    //console.log(isCoordinateIncluded);
+    //console.log(response);
     not_prox_mov = opposites[randomDirection];
 });
 
