@@ -136,6 +136,7 @@ app.post('/move', (req: Request, res: Response) => {
         move: bestDirection || "up",
         shout: 'Moving towards food!'
     };
+    console.log(response.move);
     res.json(response);
 });
 
@@ -143,10 +144,10 @@ app.post('/end', (req: Request, res: Response) => {
     res.send("ok");
 });
 
-console.log('process.env.STAGE: ' + process.env.STAGE);
+//console.log('process.env.STAGE: ' + process.env.STAGE);
 
 if (process.env.STAGE === STAGE.TEST) {
-    app.listen(3000, () => { console.log('Server up and running on: http://localhost:3000 🚀'); });
+    //app.listen(3000, () => { console.log('Server up and running on: http://localhost:3000 🚀'); });
 } else {
     module.exports.handler = ServerlessHttp(app);
 }
