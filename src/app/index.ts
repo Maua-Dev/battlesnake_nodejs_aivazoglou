@@ -1,38 +1,35 @@
 import { config } from 'dotenv';
-config()
+config();
 import express, { Request, Response } from 'express';
 import ServerlessHttp from 'serverless-http';
 import { STAGE } from './enums/stage_enum';
-import { router } from './routes/snake_routes'
+import { router } from './routes/snake_routes';
 
 const app = express();
 app.use(express.json());
-app.use(router)
+app.use(router);
 let not_prox_mov = "down";
 
 app.post('/start', (req: Request, res: Response) => {
     res.send("ok");
 });
 
-const limites: { x: number; y: number }[] = []
+const limites: { x: number; y: number }[] = [];
 
-for (let temp_var=0; temp_var<11; temp_var++){
-    limites.push({"x": -1, "y": temp_var});
-    limites.push({"x": 11, "y": temp_var});
+for (let temp_var = 0; temp_var < 11; temp_var++) {
+    limites.push({ "x": -1, "y": temp_var });
+    limites.push({ "x": 11, "y": temp_var });
 
-    limites.push({"x": temp_var, "y": -1});
-    limites.push({"x": temp_var, "y": 11});
+    limites.push({ "x": temp_var, "y": -1 });
+    limites.push({ "x": temp_var, "y": 11 });
 }
-
-let posicoes_ocupadas = [];
-let NextPosition = null;
 
 function calculateNextPosition(head: { x: number; y: number }, direction: string): { x: number; y: number } {
     switch (direction) {
         case 'up':
-            return { x: head.x, y: head.y + 1 }; // Move up
+            return { x: head.x, y: head.y - 1 }; // Move up
         case 'down':
-            return { x: head.x, y: head.y - 1 }; // Move down
+            return { x: head.x, y: head.y + 1 }; // Move down
         case 'left':
             return { x: head.x - 1, y: head.y }; // Move left
         case 'right':
@@ -42,7 +39,6 @@ function calculateNextPosition(head: { x: number; y: number }, direction: string
     }
 }
 
-// Função para embaralhar um array
 function shuffle(array: any[]) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -79,18 +75,14 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
 }
 
 app.post('/move', (req: Request, res: Response) => {
-    //console.log('req.body.board');
-    //console.log(req.body.board.food);
-    
-
-    let posicoes_ocupadas: any[] = [];
+    const posicoes_ocupadas: any[] = [];
 
     for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
-        posicoes_ocupadas = [...posicoes_ocupadas, ...req.body.board.snakes[n_cobras].body];
+        posicoes_ocupadas.push(...req.body.board.snakes[n_cobras].body);
     }
 
-    posicoes_ocupadas = [...posicoes_ocupadas, ...limites];
-    let comidas = [...req.body.board.food];
+    posicoes_ocupadas.push(...limites);
+    const comidas = [...req.body.board.food];
 
     const head = req.body.you.head;
     let directions = ["up", "down", "left", "right"];
@@ -115,16 +107,14 @@ app.post('/move', (req: Request, res: Response) => {
             possibleMoves.push({ direction, nextPos });
         }
     });
-    //console.log(possibleMoves);
 
     // Avaliar as direções possíveis e evitar becos sem saída
-    let bestDirection = possibleMoves[0].direction;
+    let bestDirection = possibleMoves[0]?.direction;
     let maxSpace = -1;
     let closestMoveToFood = possibleMoves[0];
 
     possibleMoves.forEach(move => {
         const space = floodFill(move.nextPos, posicoes_ocupadas);
-        //console.log(space);
         if (space > maxSpace) {
             maxSpace = space;
             bestDirection = move.direction;
@@ -136,16 +126,14 @@ app.post('/move', (req: Request, res: Response) => {
             closestMoveToFood = move;
         }
     });
-    
-    // Se a direção que evita becos sem saída não for em direção à comida, priorize a comida
-    //if (calculateDistance(calculateNextPosition(head, bestDirection), closestFood) >
-    //    calculateDistance(closestMoveToFood.nextPos, closestFood)) {
-    //    bestDirection = closestMoveToFood.direction;
-    //}
-    console.log(possibleMoves);
+
+    if (!bestDirection || calculateDistance(calculateNextPosition(head, bestDirection), closestFood) >
+        calculateDistance(closestMoveToFood.nextPos, closestFood)) {
+        bestDirection = closestMoveToFood?.direction;
+    }
 
     const response = {
-        move: bestDirection,
+        move: bestDirection || "up",
         shout: 'Moving towards food!'
     };
     res.json(response);
@@ -155,12 +143,10 @@ app.post('/end', (req: Request, res: Response) => {
     res.send("ok");
 });
 
-console.log('process.env.STAGE: ' + process.env.STAGE)
+console.log('process.env.STAGE: ' + process.env.STAGE);
 
 if (process.env.STAGE === STAGE.TEST) {
-    app.listen(3000, () => {console.log('Server up and running on: http://localhost:3000 🚀')})
+    app.listen(3000, () => { console.log('Server up and running on: http://localhost:3000 🚀'); });
 } else {
-    module.exports.handler = ServerlessHttp(app)
+    module.exports.handler = ServerlessHttp(app);
 }
-
-
