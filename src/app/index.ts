@@ -117,7 +117,17 @@ app.post('/move', (req: Request, res: Response) => {
         }
     });
 
+    // Função para embaralhar um array
+    function shuffle(array: any[]) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+}
     // Avaliar as direções possíveis e evitar becos sem saída
+    possibleMoves = shuffle(possibleMoves);
+
     let bestDirection = possibleMoves[0].direction;
     let maxSpace = -1;
     possibleMoves.forEach(move => {
