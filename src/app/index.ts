@@ -106,13 +106,16 @@ app.post('/move', (req: Request, res: Response) => {
     posicoes_ocupadas.push(...limites);
 
     // Coletar cabeças e vidas das outras cobras
-    for (let n_cobra = 1; n_cobra < req.body.board.snakes.length; n_cobra++) {
+    for (let n_cobra = 0; n_cobra < req.body.board.snakes.length; n_cobra++) {
         const cobra = req.body.board.snakes[n_cobra];
-        cabecas_vida.push({ head: cobra.head, vida: cobra.health });
+        // Adicionar apenas se a cabeça da cobra for diferente da sua cabeça
+        if (!isEqual(cobra.head, head)) {
+            cabecas_vida.push({ head: cobra.head, size: cobra.length });
+        }
     }
 
     // Filtrar para manter apenas as cobras que tenham vida igual ou maior que minha vida
-    let cabecasAmeaca = cabecas_vida.filter(cobra => cobra.vida >= vida);
+    let cabecasAmeaca = cabecas_vida.filter(cobra => cobra.size >= size);
 
     cabecasAmeaca.forEach(cobra => {
         const head = cobra.head;
