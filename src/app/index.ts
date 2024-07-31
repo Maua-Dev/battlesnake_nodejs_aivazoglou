@@ -115,7 +115,7 @@ app.post('/move', (req: Request, res: Response) => {
             possibleMoves.push({ direction, nextPos });
         }
     });
-    console.log(possibleMoves);
+    //console.log(possibleMoves);
 
     // Avaliar as direções possíveis e evitar becos sem saída
     let bestDirection = possibleMoves[0].direction;
@@ -124,7 +124,7 @@ app.post('/move', (req: Request, res: Response) => {
 
     possibleMoves.forEach(move => {
         const space = floodFill(move.nextPos, posicoes_ocupadas);
-        console.log(space);
+        //console.log(space);
         if (space > maxSpace) {
             maxSpace = space;
             bestDirection = move.direction;
@@ -142,7 +142,7 @@ app.post('/move', (req: Request, res: Response) => {
     //    calculateDistance(closestMoveToFood.nextPos, closestFood)) {
     //    bestDirection = closestMoveToFood.direction;
     //}
-    console.log(bestDirection);
+    console.log(possibleMoves);
 
     const response = {
         move: bestDirection,
