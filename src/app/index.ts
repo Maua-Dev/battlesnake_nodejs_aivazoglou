@@ -214,7 +214,7 @@ app.post('/move', (req: Request, res: Response) => {
         }
     });
 
-    console.log(req.body.board);
+    console.log(altura);
 
     let commonDirections = bestFloodFillDirections
         .filter(direction => bestFoodDirections.includes(direction))
