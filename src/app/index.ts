@@ -81,7 +81,10 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
 app.post('/move', (req: Request, res: Response) => {
     const posicoes_ocupadas: any[] = [];
 
-    console.log(req.body.you)
+    const body_snake = req.body.you.body;
+    const vida = req.body.you.health;
+    const tail = body_snake[body_snake.length - 1];
+    const size = req.body.you.length
 
     for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
         posicoes_ocupadas.push(...req.body.board.snakes[n_cobras].body);
@@ -103,6 +106,10 @@ app.post('/move', (req: Request, res: Response) => {
             minDistance = distance;
             closestFood = food;
         }
+    }
+
+    if (vida>50 && size % 2 === 0){
+        closestFood = tail;
     }
 
     let possibleMoves: { direction: string, nextPos: { x: number, y: number } }[] = [];
