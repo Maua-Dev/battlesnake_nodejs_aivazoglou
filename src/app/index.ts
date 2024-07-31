@@ -109,12 +109,12 @@ app.post('/move', (req: Request, res: Response) => {
     const base = req.body.board.width;
     for (let temp_var=0; temp_var<altura; temp_var++){
         limites.push({"x": -1, "y": temp_var});
-        limites.push({"x": 11, "y": temp_var});
+        limites.push({"x": base, "y": temp_var});
     }
 
     for (let temp_var=0; temp_var<base; temp_var++){
         limites.push({"x": temp_var, "y": -1});
-        limites.push({"x": temp_var, "y": 11});
+        limites.push({"x": temp_var, "y": altura});
     }
 
     posicoes_ocupadas.push(...limites);
@@ -214,7 +214,7 @@ app.post('/move', (req: Request, res: Response) => {
         }
     });
 
-    console.log(altura);
+    console.log(req.body.board);
 
     let commonDirections = bestFloodFillDirections
         .filter(direction => bestFoodDirections.includes(direction))
