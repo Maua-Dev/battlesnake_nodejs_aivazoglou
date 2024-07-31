@@ -49,21 +49,16 @@ app.post('/move', (req: Request, res: Response) => {
 
     let posicoes_ocupadas: any[] = [];
 
-    for (let n_cobras = 0; n_cobras<req.body.board.snakes.length; n_cobras++){
+    for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
         posicoes_ocupadas = [...posicoes_ocupadas, ...req.body.board.snakes[n_cobras].body];
     }
 
+    const limites = []; // Defina os limites do tabuleiro conforme necessário
     posicoes_ocupadas = [...posicoes_ocupadas, ...limites];
+    let comidas = [...req.body.board.food];
 
-    // console.log(posicoes_ocupadas);
-    // posicoes_ocupadas = [...limites, ...req.body.you.body, ...req.body.board.snakes];
-    
     const head = req.body.you.head;
-
-    //const head = { x: 2, y: 2}
-
     const directions = ["up", "down", "left", "right"];
-    // Define opposite directions
     const opposites: { [key: string]: string } = {
         "up": "down",
         "down": "up",
@@ -71,35 +66,69 @@ app.post('/move', (req: Request, res: Response) => {
         "right": "left"
     };
 
-    let NextPosition: { x: any; y: any};
-    let isCoordinateIncluded;
-    let randomDirection = directions[Math.floor(Math.random() * directions.length)];
+    // Função para calcular a próxima posição baseada na direção
+    const calculateNextPosition = (position: { x: number, y: number }, direction: string) => {
+        switch (direction) {
+            case "up":
+                return { x: position.x, y: position.y - 1 };
+            case "down":
+                return { x: position.x, y: position.y + 1 };
+            case "left":
+                return { x: position.x - 1, y: position.y };
+            case "right":
+                return { x: position.x + 1, y: position.y };
+            default:
+                return position;
+        }
+    };
 
-    do {
-        // Select a random direction
-        randomDirection = directions[Math.floor(Math.random() * directions.length)];
-        // Find the opposite direction
-        NextPosition = calculateNextPosition(head, randomDirection);
+    // Função para calcular a distância manhattan entre duas posições
+    const calculateDistance = (pos1: { x: number, y: number }, pos2: { x: number, y: number }) => {
+        return Math.abs(pos1.x - pos2.x) + Math.abs(pos1.y - pos2.y);
+    };
 
-        isCoordinateIncluded = posicoes_ocupadas.some(coordinate =>
-            coordinate.x === NextPosition.x && coordinate.y === NextPosition.y
-        );
+    // Encontre a comida mais próxima
+    let closestFood = comidas[0];
+    let minDistance = calculateDistance(head, closestFood);
+    for (let food of comidas) {
+        let distance = calculateDistance(head, food);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestFood = food;
+        }
+    }
 
-    } while (isCoordinateIncluded === true); // Ensure we don't pick the same direction twice
-    
-    
-    // const NextPosition = calculateNextPosition(head, randomDirection);
+    let possibleMoves: string[] = [];
+    directions.forEach(direction => {
+        let nextPos = calculateNextPosition(head, direction);
+        let isOccupied = posicoes_ocupadas.some(pos => pos.x === nextPos.x && pos.y === nextPos.y);
+        if (!isOccupied) {
+            possibleMoves.push(direction);
+        }
+    });
+
+    // Função para selecionar a melhor direção em direção à comida mais próxima
+    const selectBestDirection = () => {
+        let bestDirection = possibleMoves[0];
+        let minFoodDistance = calculateDistance(calculateNextPosition(head, bestDirection), closestFood);
+        possibleMoves.forEach(direction => {
+            let nextPos = calculateNextPosition(head, direction);
+            let foodDistance = calculateDistance(nextPos, closestFood);
+            if (foodDistance < minFoodDistance) {
+                minFoodDistance = foodDistance;
+                bestDirection = direction;
+            }
+        });
+        return bestDirection;
+    };
+
+    let selectedMove = selectBestDirection();
+
     const response = {
-        move: randomDirection,
-        shout: 'fe'
+        move: selectedMove,
+        shout: 'Moving towards food!'
     };
     res.json(response);
-
-    //console.log(posicoes_ocupadas);
-    //console.log(    );
-    //console.log(isCoordinateIncluded);
-    //console.log(response);
-    not_prox_mov = opposites[randomDirection];
 });
 
 app.post('/end', (req: Request, res: Response) => {
