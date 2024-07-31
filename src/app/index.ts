@@ -176,7 +176,7 @@ app.post('/move', (req: Request, res: Response) => {
         }
     }
 
-    if (vida>99 && size % 2 === 0){
+    if (vida>76 && size % 2 === 0){
         closestFood = tail;
     }
 
@@ -237,7 +237,8 @@ app.post('/move', (req: Request, res: Response) => {
     }
 
     const response = {
-        move: finalDirection || "up",
+        //move: finalDirection || "up",
+        move: "up",
         shout: 'Moving towards food!'
     };
     res.json(response);
