@@ -106,7 +106,7 @@ app.post('/move', (req: Request, res: Response) => {
     posicoes_ocupadas.push(...limites);
 
     // Coletar cabeças e vidas das outras cobras
-    for (let n_cobra = 0; n_cobra < req.body.board.snakes.length; n_cobra++) {
+    for (let n_cobra = 1; n_cobra < req.body.board.snakes.length; n_cobra++) {
         const cobra = req.body.board.snakes[n_cobra];
         cabecas_vida.push({ head: cobra.head, vida: cobra.health });
     }
@@ -143,7 +143,7 @@ app.post('/move', (req: Request, res: Response) => {
         posicoes_ocupadas.splice(indexToRemove, 1);
     }
 
-    console.log(posicoes_ocupadas);
+    //console.log(posicoes_ocupadas);
 
 
     
@@ -198,7 +198,7 @@ app.post('/move', (req: Request, res: Response) => {
     });
 
     console.log(head);
-    console.log(cabecas_vida);
+    console.log(req.body.board.snakes);
     console.log(bestFloodFillDirections);
     console.log(bestFoodDirections);
     console.log(UnSafeDirections);
