@@ -200,11 +200,7 @@ app.post('/move', (req: Request, res: Response) => {
         }
     });
 
-    console.log(head);
-    console.log(req.body.board.snakes);
-    console.log(bestFloodFillDirections);
-    console.log(bestFoodDirections);
-    console.log(UnSafeDirections);
+    console.log(req.body.board);
 
     let commonDirections = bestFloodFillDirections
         .filter(direction => bestFoodDirections.includes(direction))
