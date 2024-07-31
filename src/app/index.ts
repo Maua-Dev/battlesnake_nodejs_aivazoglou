@@ -81,6 +81,8 @@ function floodFill(head: { x: number; y: number }, occupiedPositions: { x: numbe
 app.post('/move', (req: Request, res: Response) => {
     const posicoes_ocupadas: any[] = [];
 
+    console.log(req.body.you)
+
     for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
         posicoes_ocupadas.push(...req.body.board.snakes[n_cobras].body);
     }
