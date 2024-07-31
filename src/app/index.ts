@@ -86,7 +86,8 @@ app.post('/move', (req: Request, res: Response) => {
     let comidas = [...req.body.board.food];
 
     const head = req.body.you.head;
-    const directions = ["up", "down", "left", "right"];
+    let directions = ["up", "down", "left", "right"];
+    directions = shuffle(directions);
     const opposites: { [key: string]: string } = {
         "up": "down",
         "down": "up",
@@ -123,7 +124,7 @@ app.post('/move', (req: Request, res: Response) => {
         return array;
 }
     // Avaliar as direções possíveis e evitar becos sem saída
-    possibleMoves = shuffle(possibleMoves);
+    //possibleMoves = shuffle(possibleMoves);
 
     let bestDirection = possibleMoves[0].direction;
     let maxSpace = -1;
