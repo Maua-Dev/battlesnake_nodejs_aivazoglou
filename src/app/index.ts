@@ -14,7 +14,7 @@ app.post('/start', (req: Request, res: Response) => {
     res.send("ok");
 });
 
-const limites: { x: number; y: number }[] = []
+let limites: { x: number; y: number }[] = []
 
 for (let temp_var=0; temp_var<11; temp_var++){
     limites.push({"x": -1, "y": temp_var});
@@ -101,6 +101,20 @@ app.post('/move', (req: Request, res: Response) => {
 
     for (let n_cobras = 0; n_cobras < req.body.board.snakes.length; n_cobras++) {
         posicoes_ocupadas.push(...req.body.board.snakes[n_cobras].body);
+    }
+
+    let limites: { x: number; y: number }[] = []
+
+    const altura = req.body.board.height;
+    const base = req.body.board.width;
+    for (let temp_var=0; temp_var<altura; temp_var++){
+        limites.push({"x": -1, "y": temp_var});
+        limites.push({"x": 11, "y": temp_var});
+    }
+
+    for (let temp_var=0; temp_var<base; temp_var++){
+        limites.push({"x": temp_var, "y": -1});
+        limites.push({"x": temp_var, "y": 11});
     }
 
     posicoes_ocupadas.push(...limites);
