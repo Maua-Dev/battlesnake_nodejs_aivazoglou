@@ -91,6 +91,14 @@ app.post('/move', (req: Request, res: Response) => {
     }
 
     posicoes_ocupadas.push(...limites);
+    let index_tail = posicoes_ocupadas.indexOf(tail);
+
+    // Verificar se o valor existe no array
+    if (index_tail !== -1) {
+        // Remover o valor do array
+        posicoes_ocupadas.splice(index_tail, 1);
+    }
+
     const comidas = [...req.body.board.food];
 
     const head = req.body.you.head;
