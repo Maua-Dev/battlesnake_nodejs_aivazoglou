@@ -130,6 +130,7 @@ app.post('/move', (req: Request, res: Response) => {
 
     // Filtrar para manter apenas as cobras que tenham vida igual ou maior que minha vida
     let cabecasAmeaca = cabecas_vida.filter(cobra => cobra.size >= size);
+    let cabecasAlvo = cabecas_vida.filter(cobra => cobra.size < size);
 
     cabecasAmeaca.forEach(cobra => {
         const head = cobra.head;
@@ -167,6 +168,8 @@ app.post('/move', (req: Request, res: Response) => {
 
     // Encontre a comida mais próxima
     let closestFood = comidas[0];
+    const headsArray = cabecasAlvo.map(cabeza => cabeza.head);
+    closestFood = [...closestFood, ...headsArray];
     let minDistance = calculateDistance(head, closestFood);
     for (let food of comidas) {
         let distance = calculateDistance(head, food);
