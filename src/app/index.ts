@@ -237,8 +237,8 @@ app.post('/move', (req: Request, res: Response) => {
     }
 
     const response = {
-        //move: finalDirection || "up",
-        move: "up",
+        move: finalDirection || "up",
+        //move: "up",
         shout: 'Moving towards food!'
     };
     res.json(response);
