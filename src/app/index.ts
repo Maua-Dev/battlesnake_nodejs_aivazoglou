@@ -89,6 +89,7 @@ app.post('/move', (req: Request, res: Response) => {
     const vida = req.body.you.health;
     const tail = body_snake[body_snake.length - 1];
     const pre_tail = body_snake[body_snake.length - 2];
+    const tail_outros: any[] = [];
     const size = req.body.you.length
     let cabecas_vida = [];
     let posicoesFuturasAmeaca: { x: number; y: number }[] = [];
@@ -125,6 +126,8 @@ app.post('/move', (req: Request, res: Response) => {
         // Adicionar apenas se a cabeça da cobra for diferente da sua cabeça
         if (!isEqual(cobra.head, head)) {
             cabecas_vida.push({ head: cobra.head, size: cobra.length });
+            const outras_cobras = cobra.body;
+            tail_outros.push(outras_cobras[outras_cobras.length - 1])
         }
     }
 
@@ -160,6 +163,10 @@ app.post('/move', (req: Request, res: Response) => {
         // Remover a coordenada do array
         posicoes_ocupadas.splice(indexToRemove, 1);
     }
+
+    posicoes_ocupadas = posicoes_ocupadas.filter(posicao => 
+        !tail_outros.includes(posicao)
+    );
 
     //console.log(posicoes_ocupadas);
 
