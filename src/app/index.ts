@@ -93,7 +93,7 @@ app.post('/move', (req: Request, res: Response) => {
     let cabecas_vida = [];
     let posicoesFuturasAmeaca: { x: number; y: number }[] = [];
 
-    const comidas = [...req.body.board.food];
+    let comidas = [...req.body.board.food];
 
     const head = req.body.you.head;
     let directions = ["up", "down", "left", "right"];
@@ -169,7 +169,7 @@ app.post('/move', (req: Request, res: Response) => {
     // Encontre a comida mais próxima
     let closestFood = comidas[0];
     const headsArray = cabecasAlvo.map(cabeza => cabeza.head);
-    closestFood = [...closestFood, ...headsArray];
+    comidas = [...comidas, ...headsArray];
     let minDistance = calculateDistance(head, closestFood);
     for (let food of comidas) {
         let distance = calculateDistance(head, food);
