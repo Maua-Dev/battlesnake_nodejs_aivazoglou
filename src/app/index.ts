@@ -176,7 +176,7 @@ app.post('/move', (req: Request, res: Response) => {
         }
     }
 
-    if (vida>76 && size % 2 === 0){
+    if ((vida>76 && size % 2 === 0 && cabecasAmeaca.length <= 2)){
         closestFood = tail;
     }
 
