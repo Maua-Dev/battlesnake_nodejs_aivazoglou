@@ -176,7 +176,7 @@ app.post('/move', (req: Request, res: Response) => {
         }
     }
 
-    if ((comidas.length >= 3 && size % 2 === 0 && cabecasAmeaca.length <= 2)){
+    if ((comidas.length >= 3 && size % 2 === 0 && cabecasAmeaca.length <= 1)){
         closestFood = tail;
     }
 
