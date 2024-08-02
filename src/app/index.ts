@@ -144,6 +144,8 @@ app.post('/move', (req: Request, res: Response) => {
         });
     });
 
+    posicoesFuturasAmeaca = [...posicoesFuturasAmeaca, ...req.body.board.hazards];
+
     let UnSafeDirections: string[] = [];
 
     // Calcular a próxima posição para cada direção e verificar colisão
