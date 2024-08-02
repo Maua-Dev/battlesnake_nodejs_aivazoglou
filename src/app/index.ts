@@ -168,11 +168,6 @@ app.post('/move', (req: Request, res: Response) => {
         !tail_outros.includes(posicao)
     );
 
-    //console.log(posicoes_ocupadas);
-
-
-    
-
     // Encontre a comida mais próxima
     let closestFood = comidas[0];
     const headsArray = cabecasAlvo.map(cabeza => cabeza.head);
@@ -247,8 +242,8 @@ app.post('/move', (req: Request, res: Response) => {
     }
 
     const response = {
-        //move: finalDirection || "up",
-        move: "up",
+        move: finalDirection || "up",
+        //move: "up",
         shout: 'Moving towards food!'
     };
     res.json(response);
